@@ -1,0 +1,34 @@
+:root {
+    
+  
+    
+    --clr-brown: #59412b;
+  
+    
+    --clr-blue: #3d4b65;
+  
+    
+    --clr-btn-bg: #d1d8de;
+    --clr-btn-text: #59412b;
+  
+    
+    --clr-white: #ffffff;
+  
+    
+    --clr-bg-page: #ffffff;
+  
+    
+    --clr-review-border: #e3dcd2; 
+    --clr-review-fill: #f2eae1;   
+  
+    
+    --clr-input-fill: #f2eae1;
+  
+    
+    --font-main: "Source Serif Pro", Georgia, serif;
+  
+    
+    --container-max: 1200px;
+    --container-px: 40px; 
+    --transition: 0.3s ease;
+  }
