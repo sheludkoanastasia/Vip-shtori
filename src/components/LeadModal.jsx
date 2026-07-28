@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 function LeadModal({ title, text, onClose }) {
   useEffect(() => {
@@ -16,7 +17,7 @@ function LeadModal({ title, text, onClose }) {
     }
   }, [onClose])
 
-  return (
+  return createPortal(
     <div
       className="lead-modal"
       role="dialog"
@@ -36,7 +37,8 @@ function LeadModal({ title, text, onClose }) {
           Хорошо
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
