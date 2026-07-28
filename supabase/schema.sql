@@ -14,3 +14,7 @@ create index if not exists leads_created_at_idx on public.leads (created_at desc
 
 -- Доступ только через service_role ключ на сервере (не anon с клиента).
 alter table public.leads enable row level security;
+
+-- Явные права для серверного ключа (на некоторых проектах без этого insert падает).
+grant usage on schema public to service_role;
+grant all on table public.leads to service_role;

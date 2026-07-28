@@ -48,7 +48,12 @@ export default async function handler(req, res) {
 
     if (error) {
       console.error('Supabase insert error:', error)
-      return res.status(500).json({ ok: false, error: 'Не удалось сохранить заявку' })
+      return res.status(500).json({
+        ok: false,
+        error: 'Не удалось сохранить заявку',
+        code: error.code || null,
+        details: error.message || null,
+      })
     }
 
     try {
