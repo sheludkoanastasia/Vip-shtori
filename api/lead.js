@@ -3,6 +3,7 @@ import { validateLead, normalizePhone } from '../lib/validate.js'
 import {
   formatLeadMessage,
   getOwnerChatId,
+  OWNER_KEYBOARD,
   sendTelegramMessage,
 } from '../lib/telegram.js'
 
@@ -57,7 +58,9 @@ export default async function handler(req, res) {
     }
 
     try {
-      await sendTelegramMessage(getOwnerChatId(), formatLeadMessage(data))
+      await sendTelegramMessage(getOwnerChatId(), formatLeadMessage(data), {
+        reply_markup: OWNER_KEYBOARD,
+      })
     } catch (telegramError) {
       console.error('Telegram notify error:', telegramError)
     }

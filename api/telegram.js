@@ -3,8 +3,26 @@ import { normalizePhone } from '../lib/validate.js'
 import {
   formatSearchResults,
   getOwnerChatId,
+  OWNER_KEYBOARD,
   sendTelegramMessage,
 } from '../lib/telegram.js'
+
+const BTN_LAST = '📋 Последние заявки'
+const BTN_SEARCH = '🔍 Поиск'
+const BTN_HELP = 'ℹ️ Помощь'
+
+const HELP_TEXT = [
+  '<b>Бот заявок «Vip шторы»</b>',
+  '',
+  'Нажмите кнопку внизу экрана:',
+  `• <b>${BTN_LAST}</b> — последние 5 заявок`,
+  `• <b>${BTN_SEARCH}</b> — подсказка по поиску`,
+  `• <b>${BTN_HELP}</b> — эта справка`,
+  '',
+  'Или просто напишите имя или телефон — бот найдёт заявки.',
+  '',
+  'Новые заявки с сайта приходят сюда автоматически.',
+].join('\n')
 
 async function searchLeads(query) {
   const supabase = getSupabaseAdmin()
@@ -46,50 +64,69 @@ async function getLastLeads(limit = 5) {
   return data || []
 }
 
-async function handleOwnerCommand(chatId, text) {
+/** /last@MyBot → { command: '/last', args: '' } */
+function parseCommand(text) {
   const trimmed = (text || '').trim()
+  const match = trimmed.match(/^(\/[a-zA-Z0-9_]+)(?:@\w+)?(?:\s+([\s\S]*))?$/)
+  if (!match) {
+    return { command: null, args: '', raw: trimmed }
+  }
+  return {
+    command: match[1].toLowerCase(),
+    args: (match[2] || '').trim(),
+    raw: trimmed,
+  }
+}
 
-  if (trimmed === '/start' || trimmed === '/help') {
-    await sendTelegramMessage(
+async function reply(chatId, text) {
+  await sendTelegramMessage(chatId, text, {
+    reply_markup: OWNER_KEYBOARD,
+  })
+}
+
+async function sendLastLeads(chatId) {
+  const leads = await getLastLeads(5)
+  await reply(chatId, formatSearchResults(leads, 'последние'))
+}
+
+async function handleOwnerMessage(chatId, text) {
+  const trimmed = (text || '').trim()
+  const { command, args, raw } = parseCommand(trimmed)
+
+  if (command === '/start' || command === '/help' || raw === BTN_HELP) {
+    await reply(chatId, HELP_TEXT)
+    return
+  }
+
+  if (command === '/last' || raw === BTN_LAST) {
+    await sendLastLeads(chatId)
+    return
+  }
+
+  if (raw === BTN_SEARCH) {
+    await reply(
       chatId,
-      [
-        '<b>Бот заявок «Vip шторы»</b>',
-        '',
-        'Команды:',
-        '/find имя или телефон — поиск заявки',
-        '/last — последние 5 заявок',
-        '/help — эта справка',
-        '',
-        'Новые заявки с сайта приходят сюда автоматически.',
-      ].join('\n'),
+      'Напишите имя или телефон сообщением, например:\n<code>Анна</code> или <code>8918</code>',
     )
     return
   }
 
-  if (trimmed === '/last') {
-    const leads = await getLastLeads(5)
-    await sendTelegramMessage(chatId, formatSearchResults(leads, 'последние'))
-    return
-  }
-
-  if (trimmed.startsWith('/find')) {
-    const query = trimmed.replace(/^\/find\s*/i, '').trim()
-    if (!query) {
-      await sendTelegramMessage(
+  if (command === '/find') {
+    if (!args) {
+      await reply(
         chatId,
-        'Укажите запрос: <code>/find Анна</code> или <code>/find 8918</code>',
+        'Укажите запрос после команды или просто напишите имя/телефон.',
       )
       return
     }
-
-    const leads = await searchLeads(query)
-    await sendTelegramMessage(chatId, formatSearchResults(leads, query))
+    const leads = await searchLeads(args)
+    await reply(chatId, formatSearchResults(leads, args))
     return
   }
 
-  if (trimmed && !trimmed.startsWith('/')) {
+  if (trimmed && !command) {
     const leads = await searchLeads(trimmed)
-    await sendTelegramMessage(chatId, formatSearchResults(leads, trimmed))
+    await reply(chatId, formatSearchResults(leads, trimmed))
   }
 }
 
@@ -116,7 +153,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true })
     }
 
-    await handleOwnerCommand(chatId, message.text || '')
+    await handleOwnerMessage(chatId, message.text || '')
     return res.status(200).json({ ok: true })
   } catch (error) {
     console.error('Telegram webhook error:', error)
