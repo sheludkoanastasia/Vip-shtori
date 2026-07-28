@@ -1,22 +1,44 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useReveal } from '../hooks/useReveal'
 import LeadModal from './LeadModal'
+import { applyRuPhoneInput, isCompleteRuPhone } from '../utils/phone'
 
 function Contact() {
   const { ref, className: revealClass } = useReveal()
   const [status, setStatus] = useState('idle')
   const [errorText, setErrorText] = useState('')
+  const [phone, setPhone] = useState('')
+  const phoneRef = useRef(null)
+
+  function handlePhoneChange(event) {
+    const input = event.target
+    const caret = input.selectionStart ?? input.value.length
+    const { value, caret: nextCaret } = applyRuPhoneInput(phone, input.value, caret)
+
+    setPhone(value)
+
+    requestAnimationFrame(() => {
+      if (!phoneRef.current) return
+      phoneRef.current.setSelectionRange(nextCaret, nextCaret)
+    })
+  }
 
   async function handleSubmit(event) {
     event.preventDefault()
     if (status === 'loading') return
+
+    if (!isCompleteRuPhone(phone)) {
+      setStatus('error')
+      setErrorText('Укажите полный номер: +7(9XX)-XXX-XX-XX')
+      return
+    }
 
     const form = event.currentTarget
     const formData = new FormData(form)
 
     const payload = {
       name: formData.get('name'),
-      phone: formData.get('phone'),
+      phone,
       company: formData.get('company'),
     }
 
@@ -37,6 +59,7 @@ function Contact() {
       }
 
       form.reset()
+      setPhone('')
       setStatus('success')
     } catch (error) {
       setStatus('error')
@@ -80,14 +103,18 @@ function Contact() {
               disabled={status === 'loading'}
             />
             <input
+              ref={phoneRef}
               type="tel"
               name="phone"
               className="contact__input"
-              placeholder="Введите номер телефона..."
+              placeholder="+7(900)-000-00-00"
+              value={phone}
+              onChange={handlePhoneChange}
               required
-              maxLength={32}
+              inputMode="numeric"
               autoComplete="tel"
               disabled={status === 'loading'}
+              aria-label="Номер телефона"
             />
           </div>
 

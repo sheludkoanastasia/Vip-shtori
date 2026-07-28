@@ -41,7 +41,7 @@ function About() {
               </span>
               <h3 className="step__title">Пошив</h3>
               <p className="step__desc">
-                Индивидуальный пошив по вашим меркам и размерам
+                Индивидуальный пошив по вашим меркам
               </p>
             </div>
 
@@ -51,7 +51,7 @@ function About() {
               </span>
               <h3 className="step__title">Установка</h3>
               <p className="step__desc">
-                Профессиональная установка тканей и финальная примерка
+                Финальная примерка и установка штор
               </p>
             </div>
           </div>

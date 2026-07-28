@@ -10,7 +10,7 @@ function Footer() {
           <h2 className="footer__title">Связаться с нами</h2>
           <p className="footer__schedule">Звонки с 10:00 до 20:00</p>
           <a href="tel:+79181267633" className="footer__phone">
-            89181267633
+            88888888888
           </a>
         </div>
 

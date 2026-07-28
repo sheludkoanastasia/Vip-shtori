@@ -4,7 +4,7 @@ function Hero() {
       <div className="hero__content container">
         <h1 className="hero__title">Идеальные шторы для вашего интерьера</h1>
         <p className="hero__subtitle">
-          индивидуальный пошив, отбор тканей и безупречное качество
+          индивидуальный пошив, подбор тканей и безупречное качество
         </p>
         <a href="#contact" className="btn hero__btn">
           Оставить заявку
