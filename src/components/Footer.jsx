@@ -8,9 +8,9 @@ function Footer() {
       <div className="footer__inner container">
         <div className="footer__info reveal-child">
           <h2 className="footer__title">Связаться с нами</h2>
-          <p className="footer__schedule">Звонки с 10:00 до 20:00</p>
-          <a href="tel:+79181267633" className="footer__phone">
-            88888888888
+          <p className="footer__schedule">Звонки с 10:00 до 20:00 (г. Краснодар)</p>
+          <a href="tel:+79686557438" className="footer__phone">
+            +7(968)655-74-38
           </a>
         </div>
 
