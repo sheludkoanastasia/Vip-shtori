@@ -654,8 +654,9 @@ body {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(45, 35, 28, 0.45);
-  backdrop-filter: blur(4px);
+  background: transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   animation: lead-modal-fade 0.35s ease both;
 }
 
@@ -664,7 +665,7 @@ body {
   padding: 36px 32px;
   background: rgba(250, 248, 245, 0.96);
   text-align: center;
-  box-shadow: 0 16px 48px rgba(45, 35, 28, 0.18);
+  box-shadow: 0 16px 48px rgba(45, 35, 28, 0.12);
   animation: lead-modal-up 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
