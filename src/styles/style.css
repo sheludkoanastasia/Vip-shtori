@@ -654,37 +654,39 @@ body {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: transparent;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
   animation: lead-modal-fade 0.35s ease both;
 }
 
 .lead-modal__card {
-  width: min(100%, 420px);
-  padding: 36px 32px;
-  background: rgba(250, 248, 245, 0.96);
+  width: min(92vw, 720px);
+  padding: 64px 56px;
+  background: rgba(250, 248, 245, 0.98);
   text-align: center;
-  box-shadow: 0 16px 48px rgba(45, 35, 28, 0.12);
+  box-shadow: 0 24px 64px rgba(45, 35, 28, 0.14);
   animation: lead-modal-up 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 .lead-modal__title {
-  font-size: 28px;
+  font-size: clamp(32px, 4vw, 48px);
   font-weight: 400;
   color: var(--clr-brown);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .lead-modal__text {
-  font-size: 16px;
+  font-size: clamp(18px, 2vw, 22px);
   color: var(--clr-blue);
   line-height: 1.5;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
 }
 
 .lead-modal__btn {
-  min-width: 140px;
+  min-width: 180px;
+  padding: 16px 40px;
+  font-size: 16px;
 }
 
 @keyframes lead-modal-fade {
